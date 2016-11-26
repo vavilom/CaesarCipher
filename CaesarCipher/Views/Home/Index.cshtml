@@ -4,23 +4,24 @@
 
 <div class="row main-box">
     <div class="col-md-5">
-        <textarea class="form-control" rows="10"></textarea>
+        <textarea class="form-control" rows="10" placeholder="Enter text..." ng-model="userText" ng-focus="userText = null">
+        </textarea>
     </div>
     <div class="col-md-2 action-box">
         <div class="input-group action-ctrl">
             <span class="input-group-addon">ROT</span>
-            <input type="number" class="form-control" max="26" min="0" value="0" placeholder="Enter text...">
+            <input type="number" class="form-control" max="26" min="0" ng-model="rotate">
         </div>
-        <a class="btn btn-default action-ctrl" href="#">
+        <button class="btn btn-default action-ctrl" ng-click="getEncryption()">
             Encrypt
             <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-        </a>
+        </button>
         <a class="btn btn-default action-ctrl" href="#">
             Decrypt
             <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
         </a>
     </div>
     <div class="col-md-5">
-        <textarea class="form-control" rows="10"></textarea>
+        <textarea class="form-control" rows="10" ng-model="resultText" readonly></textarea>
     </div>
 </div>

@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
-<html>
+<html ng-app="encriptyonModule">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body>
+<body ng-controller="encriptyonCtrl">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -20,11 +20,46 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>"Libenter homines id, quod volunt, credunt" - <b>Gaius Julius Caesar</b></p>
+            <p>"Libenter homines id, quod volunt, credunt" - <b>Gaius Julius Caesar</b> {{1+1}}</p>
         </footer>
     </div>
 
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script>
+        var app = angular.module("encriptyonModule", []);
+        app.factory('EncryptService', ['$http', function ($http) {
+            var EncryptService = {};
+            EncryptService.getEncryptionText = function (postData) {
+                return $http({
+                    url: '/Encrypt/GetEncryption',
+                    method: "POST",
+                    params: postData
+                });
+            };
+            return EncryptService;
+        }]);  
+        app.controller("encriptyonCtrl", function ($scope, EncryptService) {
+            //view data
+            $scope.rotate = 0;
+            $scope.userText = "";
+            $scope.resultText = "";
+
+            //receive encrypted text from the server
+            $scope.getEncryption = function () {
+                var postData = {
+                    userText: $scope.userText,
+                    rotate: $scope.rotate
+                };
+                EncryptService.getEncryptionText(postData)
+                .success(function (textEnc) {
+                    $scope.resultText = textEnc;
+                });
+            }
+        });
+    </script>
     @RenderSection("scripts", required: false)
+    
 </body>
 </html>
