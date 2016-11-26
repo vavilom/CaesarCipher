@@ -12,6 +12,7 @@ app.factory('EncryptService', ['$http', function ($http) {
     return EncryptService;
 }]);
 app.controller("encriptyonCtrl", function ($scope, EncryptService) {
+    $scope.repeatSymbols = {};
     //view data
     $scope.rotate = 0;
     $scope.userText = "";
@@ -31,4 +32,23 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
             $scope.resultText = textEnc.substring(1, textEnc.length - 1).replace(/\\n/g, '\n');
         });
     }
+
+    $scope.buildDiagram = function () {
+        $scope.repeatSymbols = {};
+
+        for (var i = 0; i < $scope.userText.length; i++) {
+            var symbol = $scope.userText[i];
+            if (symbol == ' ') continue;
+            $scope.repeatSymbols[symbol] = (isNaN($scope.repeatSymbols[symbol]) ? 1 : $scope.repeatSymbols[symbol] + 1);
+        }
+
+    };
+
+    $scope.test = function () {
+        $scope.symbols['b'] += 5;
+        $scope.symbols['b']++;
+        $scope.symbols['c'] = (isNaN($scope.symbols['c']) ? 1 : $scope.symbols['c'] + 1);
+        $scope.symbols['c']++;
+        console.log($scope.symbols);
+    };
 });
