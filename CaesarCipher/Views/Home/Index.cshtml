@@ -4,7 +4,7 @@
 
 <div class="row main-box">
     <div class="col-md-5">
-        <textarea class="form-control" rows="10" placeholder="Enter text..." ng-model="userText" ng-focus="userText = null" ng-change="buildDiagram()">
+        <textarea class="form-control" rows="10" placeholder="Enter text..." ng-model="userText" ng-focus="clearData()">
         </textarea>
     </div>
     <div class="col-md-2 action-box">
@@ -24,8 +24,13 @@
     <div class="col-md-5">
         <textarea class="form-control" rows="10" ng-model="resultText" readonly></textarea>
     </div>
-    
-    <ul>
-        <li ng-repeat="(num, count) in repeatSymbols">{{num}}: {{count}}</li>
-    </ul>
+</div>
+<div ng-controller="diagramCtrl">
+    <div class="panel panel-default panel-diagram" ng-show="columns.length">
+        <div class="panel-heading">Letters statistics</div>
+        <div class="panel-body">
+            <div diagram="columns">
+            </div>
+        </div>
+    </div>
 </div>

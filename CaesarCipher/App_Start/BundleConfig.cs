@@ -25,11 +25,13 @@ namespace CaesarCipher
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                "~/Scripts/app/diagramModule.js",
                 "~/Scripts/app/encriptyonModule.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/diagramStyle.css"));
         }
     }
 }

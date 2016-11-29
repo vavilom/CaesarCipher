@@ -26,7 +26,16 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-animate.min.js"></script>
+    <script type="text/template" id="template">
+        <ul class="diagram">
+            <li ng-repeat="item in parameters" class="bar" ng-class="getColor($index)" style="height: {{calcHeight(item.amount)}}%">
+                <div class="amount">{{item.amount}}</div>
+                <div class="parameter">{{item.parameter}}</div>
+            </li>
+        </ul>
+    </script>
     @Scripts.Render("~/bundles/app")
     @RenderSection("scripts", required: false)
     

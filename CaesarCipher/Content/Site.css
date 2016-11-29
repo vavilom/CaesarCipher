@@ -43,3 +43,8 @@
     width: 120px;
     margin: 5px auto 5px auto;
 }
+
+.panel-diagram{
+    margin: 0 14px;
+    transition: 1s;
+}

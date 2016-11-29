@@ -1,4 +1,4 @@
-﻿var app = angular.module("encriptyonModule", []);
+﻿var app = angular.module("encriptyonModule", ["diagramModule"]);
 app.factory('EncryptService', ['$http', function ($http) {
     //send text on the server, and get encrypt/decrypt result
     var EncryptService = {};
@@ -17,38 +17,47 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
     $scope.rotate = 0;
     $scope.userText = "";
     $scope.resultText = "";
+    $scope.columns = [];
 
     //receive encrypted text from the server
     $scope.getEncryption = function (encState) {
+        $scope.buildDiagram();
+
         var postData = {
             userText: $scope.userText,
             rotate: $scope.rotate,
             encrypt: encState //bool variable - select encrypt or decrypt text  (true - encrypt) 
         };
+
         EncryptService.getEncryptionText(postData)
         .success(function (textEnc) {
-            console.log(textEnc);
             //show processed text in textarea
-            $scope.resultText = textEnc.substring(1, textEnc.length - 1).replace(/\\n/g, '\n');
+            $scope.resultText = textEnc.replace(/\\n/g, '\n');
         });
     }
 
     $scope.buildDiagram = function () {
-        $scope.repeatSymbols = {};
-
-        for (var i = 0; i < $scope.userText.length; i++) {
-            var symbol = $scope.userText[i];
-            if (symbol == ' ') continue;
-            $scope.repeatSymbols[symbol] = (isNaN($scope.repeatSymbols[symbol]) ? 1 : $scope.repeatSymbols[symbol] + 1);
+        if ($scope.userText.length) {
+            var repeatSymbols = {};
+            //count the number of repetitions (only english alphabet)
+            for (var i = 0; i < $scope.userText.length; i++) {
+                var symbol = $scope.userText[i];
+                if (/[a-zA-Z]/.test(symbol)) {
+                    repeatSymbols[symbol] = (isNaN(repeatSymbols[symbol]) ? 1 : repeatSymbols[symbol] + 1);
+                }
+            }
+            //clear data for coluns diagram and add new data
+            $scope.columns.length = 0;
+            for (key in repeatSymbols) {
+                $scope.columns.push({ parameter: key, amount: repeatSymbols[key] });
+            }
         }
-
+        
     };
 
-    $scope.test = function () {
-        $scope.symbols['b'] += 5;
-        $scope.symbols['b']++;
-        $scope.symbols['c'] = (isNaN($scope.symbols['c']) ? 1 : $scope.symbols['c'] + 1);
-        $scope.symbols['c']++;
-        console.log($scope.symbols);
+    //clear user text and data for diagram
+    $scope.clearData = function () {
+        $scope.userText = null;
+        $scope.columns.length = 0;
     };
 });
