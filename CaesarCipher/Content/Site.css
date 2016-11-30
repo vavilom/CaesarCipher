@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -47,4 +48,22 @@
 .panel-diagram{
     margin: 0 14px;
     transition: 1s;
+}
+
+.hacker{
+    background: #222222;
+    border-color: #080808;
+    color: #d0d0d0;
+    text-align: center;
+    padding: 20px;
+    -moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	border-radius: 15px;
+    margin: 20px 14px;
+}
+
+.man{
+    width: 200px;
+    display: inline-block;
+    margin: 10px;
 }

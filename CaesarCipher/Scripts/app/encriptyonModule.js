@@ -25,9 +25,21 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
     $scope.userText = "";
     $scope.resultText = "";
     $scope.columns = [];
+    $scope.thoughts = [
+        "Type the encrypted text, and I will try decrypt it.",
+        "Unfortunately i don't know!",
+        "Please wait I am thinking.",
+        "I know! It is "
+    ];
+    $scope.think = $scope.thoughts[0];
+    $scope.waiting = false;
 
     //receive encrypted text from the server
     $scope.getEncryption = function (encState) {
+        if (!$scope.userText || !$scope.rotate) {
+            $scope.think = "Type the encrypted text, and rotate number maste be from 0 to 26.";
+            return;
+        }
         $scope.buildDiagram();
 
         var postData = {
@@ -45,17 +57,31 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
 
     //attempt rashifrovat text (successful - get rotation / fail - get -1)
     $scope.tryDecrypt = function () {
-        var postData = {
-            userEncryptText: $scope.userText
-        };
+        if ($scope.userText) {
+            $scope.waiting = true;
+            $scope.think = $scope.thoughts[2];
+            var postData = {
+                userEncryptText: $scope.userText
+            };
 
-        EncryptService.tryDecrypt(postData)
-        .success(function (result) {
-            alert(result);
-        })
-        .error(function (result) {
-            alert("error " + result);
-        });
+            EncryptService.tryDecrypt(postData)
+            .success(function (result) {
+                if (result >= 0) {
+                    $scope.think = $scope.thoughts[3] + " " + result + "!";
+                }
+                else {
+                    $scope.think = $scope.thoughts[1];
+                }
+                $scope.waiting = false;
+            })
+            .error(function (result) {
+                $scope.think = "Error! I am sory!";
+                $scope.waiting = false;
+            });
+        }
+        else {
+            $scope.think = "You did not type text."
+        }
     }
 
     $scope.buildDiagram = function () {
@@ -81,5 +107,6 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
     $scope.clearData = function () {
         $scope.userText = null;
         $scope.columns.length = 0;
+        $scope.think = $scope.thoughts[0];
     };
 });

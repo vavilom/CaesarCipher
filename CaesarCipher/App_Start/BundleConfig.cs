@@ -31,7 +31,8 @@ namespace CaesarCipher
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/diagramStyle.css"));
+                      "~/Content/diagramStyle.css",
+                      "~/Content/progress.css"));
         }
     }
 }

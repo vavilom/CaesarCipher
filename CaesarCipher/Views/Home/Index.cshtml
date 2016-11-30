@@ -20,7 +20,9 @@
             Decrypt
             <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
         </button>
-        <button class="btn btn-default action-ctrl" ng-click="tryDecrypt()">Try decrypt</button>
+        <button class="btn btn-default action-ctrl" ng-click="tryDecrypt()" ng-disabled="waiting">
+            Try decrypt
+        </button>
     </div>
     <div class="col-md-5">
         <textarea class="form-control" rows="10" ng-model="resultText" readonly></textarea>
@@ -33,5 +35,12 @@
             <div diagram="columns">
             </div>
         </div>
+    </div>
+</div>
+<div class="hacker">
+    <h3>{{think}}</h3>
+    <img class="man" src="~/Content/img/manHi.svg" />
+    <div class="meter" ng-show="waiting">
+        <span style="width: 100%"></span>
     </div>
 </div>

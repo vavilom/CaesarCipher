@@ -13,14 +13,22 @@ namespace CaesarCipher.Controllers
         [HttpPost]
         public JsonResult GetEncryption(string userText, short rotate, bool encrypt)
         {
-            var result = cipher.Encrypt(userText, rotate, encrypt);
+            string result = string.Empty;
+            if (userText.Length > 0)
+            {
+                result = cipher.Encrypt(userText, rotate, encrypt);
+            }
             return Json(result);
         }
 
         [HttpPost]
         public JsonResult tryDecryp(string userEncryptText)
         {
-            int result = cipher.tryAsyncDecrypt(userEncryptText);
+            int result = -1;
+            if (userEncryptText.Length > 0)
+            {
+                result = cipher.tryDecrypt(userEncryptText);
+            }
             return Json(result);
         }
     }
