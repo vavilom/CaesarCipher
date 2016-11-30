@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace CaesarCipher.Models
@@ -83,6 +84,44 @@ namespace CaesarCipher.Models
             }
 
             return result;
+        }
+
+        //return the number of matches in real english words 
+        public static int countMatches(string text) {
+            string[] words = text.Split(new[] { ' ', ',', ':', '?', '!' }, StringSplitOptions.RemoveEmptyEntries);
+            int counter = -1;
+
+            foreach (var item in words)
+            {
+                using (DatabaseWordsEntities db = new DatabaseWordsEntities())
+                {
+                    //serch word in database
+                    var serchWord = db.Words.Where(w => w.Value.Contains(item)).FirstOrDefault();
+                    if (serchWord != null) counter++;
+                }
+            }
+
+            return counter;
+        }
+
+        //iterate all rotation from 0 to 25, each variant checking in english words in database.
+        //return variant who has maximum matches.
+        public static int tryDecrypt(string ciphertext) {
+            int resultRotation = -1;
+            int maxMatches = -1;
+
+            for (short i = 0; i < 26; i++)
+            {
+                string decryptStr = Encrypt(ciphertext, i, false);
+                int matches = countMatches(decryptStr);
+                if(matches > maxMatches)
+                {
+                    maxMatches = matches;
+                    resultRotation = i;
+                }
+            }
+
+            return resultRotation;
         }
     }
 }

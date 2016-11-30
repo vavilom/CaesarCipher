@@ -15,5 +15,12 @@ namespace CaesarCipher.Controllers
             var result = cipher.Encrypt(userText, rotate, encrypt);
             return Json(result);
         }
+
+        [HttpPost]
+        public JsonResult tryDecryp(string userEncryptText)
+        {
+            int result = cipher.tryDecrypt(userEncryptText);
+            return Json(result);
+        }
     }
 }

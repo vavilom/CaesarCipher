@@ -9,6 +9,13 @@ app.factory('EncryptService', ['$http', function ($http) {
             params: postData
         });
     };
+    EncryptService.tryDecrypt = function (postData) {
+        return $http({
+            url: '/Encrypt/tryDecryp',
+            method: "POST",
+            params: postData
+        });
+    };
     return EncryptService;
 }]);
 app.controller("encriptyonCtrl", function ($scope, EncryptService) {
@@ -33,6 +40,21 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
         .success(function (textEnc) {
             //show processed text in textarea
             $scope.resultText = textEnc.replace(/\\n/g, '\n');
+        });
+    }
+
+    //attempt rashifrovat text (successful - get rotation / fail - get -1)
+    $scope.tryDecrypt = function () {
+        var postData = {
+            userEncryptText: $scope.userText
+        };
+
+        EncryptService.tryDecrypt(postData)
+        .success(function (result) {
+            alert(result);
+        })
+        .error(function (result) {
+            alert("error " + result);
         });
     }
 
