@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CaesarCipher.Models
 {
@@ -122,6 +124,40 @@ namespace CaesarCipher.Models
             }
 
             return resultRotation;
+        }
+
+        public static int tryAsyncDecrypt(string ciphertext)
+        {
+            Dictionary<int, int> all = new Dictionary<int, int>();
+
+            for (short i = 0; i < 26; i++)
+            {
+                string decryptStr = Encrypt(ciphertext, i, false);
+                var matches = SomeActionAsync(decryptStr);
+                all[i] = matches.Result;
+                matches.Wait();
+            }
+            
+            return all.FirstOrDefault(x => x.Value == all.Values.Max()).Key;
+        }
+
+        public static Task<int> SomeActionAsync(string text)
+        {
+            var tcs = new TaskCompletionSource<int>();
+
+            Task.Run(() => {
+                try
+                {
+                    var result = countMatches(text);
+                    tcs.SetResult(result);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            });
+
+            return tcs.Task;
         }
     }
 }

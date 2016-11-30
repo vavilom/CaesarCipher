@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CaesarCipher.Models;
+using System.Threading.Tasks;
 
 namespace CaesarCipher.Controllers
 {
@@ -19,7 +20,7 @@ namespace CaesarCipher.Controllers
         [HttpPost]
         public JsonResult tryDecryp(string userEncryptText)
         {
-            int result = cipher.tryDecrypt(userEncryptText);
+            int result = cipher.tryAsyncDecrypt(userEncryptText);
             return Json(result);
         }
     }
