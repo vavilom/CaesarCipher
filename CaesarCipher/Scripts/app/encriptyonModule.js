@@ -37,7 +37,7 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
     //receive encrypted text from the server
     $scope.getEncryption = function (encState) {
         if (!$scope.userText || !$scope.rotate) {
-            $scope.think = "Type the encrypted text, and rotate number maste be from 0 to 26.";
+            $scope.think = "Type the encrypted text, and rotate number maste be from 1 to 26.";
             return;
         }
         $scope.buildDiagram();
@@ -58,6 +58,7 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
     //attempt rashifrovat text (successful - get rotation / fail - get -1)
     $scope.tryDecrypt = function () {
         if ($scope.userText) {
+            $scope.columns.length = 0;
             $scope.waiting = true;
             $scope.think = $scope.thoughts[2];
             var postData = {
@@ -89,8 +90,8 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
             var repeatSymbols = {};
             //count the number of repetitions (only english alphabet)
             for (var i = 0; i < $scope.userText.length; i++) {
-                var symbol = $scope.userText[i];
-                if (/[a-zA-Z]/.test(symbol)) {
+                var symbol = $scope.userText[i].toUpperCase();
+                if (/[A-Z]/.test(symbol)) {
                     repeatSymbols[symbol] = (isNaN(repeatSymbols[symbol]) ? 1 : repeatSymbols[symbol] + 1);
                 }
             }
@@ -100,7 +101,6 @@ app.controller("encriptyonCtrl", function ($scope, EncryptService) {
                 $scope.columns.push({ parameter: key, amount: repeatSymbols[key] });
             }
         }
-        
     };
 
     //clear user text and data for diagram
