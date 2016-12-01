@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -88,76 +89,41 @@ namespace CaesarCipher.Models
             return result;
         }
 
-        //return the number of matches in real english words 
-        public static int countMatches(string text) {
-            string[] words = text.Split(new[] { ' ', ',', ':', '?', '!' }, StringSplitOptions.RemoveEmptyEntries);
-            int counter = -1;
+        //return regular expression for dinamic condition serch english words 
+        public static Expression<Func<Word,bool>> getPredicate(string[] words) {
+            var predicate = PredicateBuilder.False<Word>();
 
-            foreach (var item in words)
+            foreach (string keyword in words)
             {
-                using (DatabaseWordsEntities db = new DatabaseWordsEntities())
-                {
-                    //serch word in database
-                    var serchWord = db.Words.Where(w => w.Value.Contains(item)).FirstOrDefault();
-                    if (serchWord != null) counter++;
-                }
+                predicate = predicate.Or(p => p.Value == keyword);
             }
 
-            return counter;
+            return predicate;
         }
 
         //iterate all rotation from 0 to 25, each variant checking in english words in database.
         //return variant who has maximum matches.
         public static int tryDecrypt(string ciphertext) {
             int resultRotation = -1;
-            int maxMatches = -1;
+            int maxMatches = 0;
 
-            for (short i = 0; i < 26; i++)
+            using (DatabaseWordsEntities db = new DatabaseWordsEntities())
             {
-                string decryptStr = Encrypt(ciphertext, i, false);
-                int matches = countMatches(decryptStr);
-                if(matches > maxMatches)
+                for (short i = 0; i < 26; i++)
                 {
-                    maxMatches = matches;
-                    resultRotation = i;
+                    string decryptStr = Encrypt(ciphertext, i, false);
+                    string[] words = decryptStr.Split(new[] { ' ', ',', ':', '?', '!' }, StringSplitOptions.RemoveEmptyEntries);
+                    int matches = db.Words.Where(getPredicate(words).Compile()).Count();
+                    if (matches > maxMatches)
+                    {
+                        if (matches > 4) return i;//if found many matches not sense to find more
+                        maxMatches = matches;
+                        resultRotation = i;
+                    }
                 }
             }
 
             return resultRotation;
-        }
-
-        public static int tryAsyncDecrypt(string ciphertext)
-        {
-            Dictionary<int, int> all = new Dictionary<int, int>();
-
-            for (short i = 0; i < 26; i++)
-            {
-                string decryptStr = Encrypt(ciphertext, i, false);
-                var matches = SomeActionAsync(decryptStr);
-                all[i] = matches.Result;
-                matches.Wait();
-            }
-            
-            return all.FirstOrDefault(x => x.Value == all.Values.Max()).Key;
-        }
-
-        public static Task<int> SomeActionAsync(string text)
-        {
-            var tcs = new TaskCompletionSource<int>();
-
-            Task.Run(() => {
-                try
-                {
-                    var result = countMatches(text);
-                    tcs.SetResult(result);
-                }
-                catch (Exception ex)
-                {
-                    tcs.SetException(ex);
-                }
-            });
-
-            return tcs.Task;
         }
     }
 }

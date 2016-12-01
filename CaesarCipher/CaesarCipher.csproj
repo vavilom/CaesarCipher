@@ -164,6 +164,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\cipher.cs" />
+    <Compile Include="Models\PredicateBuilder.cs" />
     <Compile Include="Models\Word.cs">
       <DependentUpon>WordModel.tt</DependentUpon>
     </Compile>
