@@ -125,5 +125,30 @@ namespace CaesarCipher.Models
 
             return resultRotation;
         }
+
+        //iterate all rotation from 0 to 25, each variant checking in english words in NHunspell lib.
+        //return variant who has maximum matches.
+        public static int tryDecryptWithoutDatabase(string ciphertext)
+        {
+            int resultRotation = -1;
+            int maxMatches = 0;
+
+            using (DatabaseWordsEntities db = new DatabaseWordsEntities())
+            {
+                for (short i = 0; i < 26; i++)
+                {
+                    string decryptStr = Encrypt(ciphertext, i, false);
+                    
+                    int matches = Speller.Analyze(decryptStr);
+                    if (matches > maxMatches && matches > 0)
+                    {
+                        maxMatches = matches;
+                        resultRotation = i;
+                    }
+                }
+            }
+
+            return resultRotation;
+        }
     }
 }

@@ -25,10 +25,13 @@ namespace CaesarCipher.Controllers
         public JsonResult tryDecryp(string userEncryptText)
         {
             int result = -1;
+
             if (userEncryptText.Length > 0)
             {
-                result = cipher.tryDecrypt(userEncryptText);
-            }
+                //result = cipher.tryDecrypt(userEncryptText);
+                result = cipher.tryDecryptWithoutDatabase(userEncryptText);
+            }   
+
             return Json(result);
         }
     }
